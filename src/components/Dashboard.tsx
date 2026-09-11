@@ -23,6 +23,8 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import Tracking from "./Tracking";
+import { summarizeHistory } from "../lib/risk";
+import { loadSelected, loadStore } from "../lib/store";
 
 const API_URL =
   import.meta.env.PUBLIC_API_URL ??
@@ -30,78 +32,22 @@ const API_URL =
 
 const FETCH_TIMEOUT_MS = 20000;
 
-type FormData = {
-  Pregnancies: number;
-  Glucose: number;
-  BloodPressure: number;
-  SkinThickness: number;
-  Insulin: number;
-  BMI: number;
-  DiabetesPedigreeFunction: number;
-  Age: number;
-};
+import {
+  defaultInputs,
+  sliderConfigs,
+  type Feature,
+  type Inputs,
+} from "../lib/metrics";
 
-const sliderConfigs: Record<
-  keyof FormData,
-  {
-    min: number;
-    max: number;
-    step: number;
-    unit: string;
-    normal: string;
-    icon: LucideIcon;
-  }
-> = {
-  Pregnancies: { min: 0, max: 20, step: 1, unit: "", normal: "", icon: Baby },
-  Glucose: {
-    min: 0,
-    max: 200,
-    step: 1,
-    unit: "mg/dL",
-    normal: "Healthy: below 140 mg/dL",
-    icon: Droplets,
-  },
-  BloodPressure: {
-    min: 0,
-    max: 140,
-    step: 1,
-    unit: "mm Hg",
-    normal: "Healthy diastolic: 60 to 80 mm Hg",
-    icon: HeartPulse,
-  },
-  SkinThickness: {
-    min: 0,
-    max: 110,
-    step: 1,
-    unit: "mm",
-    normal: "Typical triceps: 10 to 30 mm",
-    icon: Ruler,
-  },
-  Insulin: {
-    min: 0,
-    max: 900,
-    step: 1,
-    unit: "μU/ml",
-    normal: "Healthy: 16 to 166 μU/ml",
-    icon: Syringe,
-  },
-  BMI: {
-    min: 10,
-    max: 80,
-    step: 0.1,
-    unit: "kg/m²",
-    normal: "Healthy: 18.5 to 24.9 kg/m²",
-    icon: Scale,
-  },
-  DiabetesPedigreeFunction: {
-    min: 0.05,
-    max: 2.5,
-    step: 0.01,
-    unit: "",
-    normal: "Family history score",
-    icon: Dna,
-  },
-  Age: { min: 21, max: 100, step: 1, unit: "years", normal: "", icon: Cake },
+const metricIcons: Record<Feature, LucideIcon> = {
+  Pregnancies: Baby,
+  Glucose: Droplets,
+  BloodPressure: HeartPulse,
+  SkinThickness: Ruler,
+  Insulin: Syringe,
+  BMI: Scale,
+  DiabetesPedigreeFunction: Dna,
+  Age: Cake,
 };
 
 const displayName = (key: string) =>
@@ -158,16 +104,7 @@ function Gauge({ value }: { value: number | null }) {
 }
 
 export default function Dashboard() {
-  const [formData, setFormData] = useState<FormData>({
-    Pregnancies: 0,
-    Glucose: 100,
-    BloodPressure: 70,
-    SkinThickness: 20,
-    Insulin: 80,
-    BMI: 25,
-    DiabetesPedigreeFunction: 0.5,
-    Age: 30,
-  });
+  const [formData, setFormData] = useState<Inputs>(defaultInputs);
 
   const [riskScore, setRiskScore] = useState<number | null>(null);
   const [shapData, setShapData] = useState<{ feature: string; impact: number }[]>(
@@ -178,6 +115,7 @@ export default function Dashboard() {
   const [coachAdvice, setCoachAdvice] = useState<string>("");
   const [loadingCoach, setLoadingCoach] = useState(false);
   const [tab, setTab] = useState<"assess" | "track">("assess");
+  const [coachBasis, setCoachBasis] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
   const runPredict = async () => {
@@ -249,11 +187,30 @@ export default function Dashboard() {
   const fetchAiCoach = async () => {
     if (riskScore === null) return;
     setLoadingCoach(true);
+    setCoachBasis(null);
+    let trend: string | undefined;
+    try {
+      const store = loadStore();
+      const pid = loadSelected();
+      const person = store.persons.find((p) => p.id === pid);
+      const mine = pid
+        ? store.checkins.filter((c) => c.personId === pid)
+        : [];
+      const summary = summarizeHistory(mine);
+      if (person && summary) {
+        trend = summary;
+        setCoachBasis(
+          `Advice uses ${mine.length} past checkins from ${person.name}.`,
+        );
+      }
+    } catch {
+      trend = undefined;
+    }
     try {
       const res = await fetch("/api/coach", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ patient: formData, risk_score: riskScore }),
+        body: JSON.stringify({ patient: formData, risk_score: riskScore, trend }),
       });
       if (!res.ok) throw new Error(`coach failed: ${res.status}`);
       const data = await res.json();
@@ -303,10 +260,10 @@ export default function Dashboard() {
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 md:col-span-1">
           <h2 className="text-xl font-semibold mb-4">Patient Metrics</h2>
           <div className="space-y-5">
-            {(Object.entries(formData) as [keyof FormData, number][]).map(
+            {(Object.entries(formData) as [Feature, number][]).map(
               ([key, value]) => {
                 const config = sliderConfigs[key];
-                const Icon = config.icon;
+                const Icon = metricIcons[key];
                 return (
                   <div key={key} className="flex flex-col">
                     <div className="flex justify-between items-end gap-2">
@@ -422,11 +379,15 @@ export default function Dashboard() {
               <button
                 onClick={fetchAiCoach}
                 disabled={loadingCoach || riskScore === null}
-                className="px-4 py-2 bg-brand hover:bg-blue-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
+                className="px-4 py-2 bg-brand hover:bg-brand-deep text-white rounded-lg font-medium transition-colors disabled:opacity-50"
               >
                 {loadingCoach ? "Analyzing..." : "Generate Action Plan"}
               </button>
             </div>
+
+            {coachBasis && (
+              <p className="text-xs text-gray-500 mb-3">{coachBasis}</p>
+            )}
 
             {coachAdvice && (
               <div

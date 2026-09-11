@@ -1,5 +1,5 @@
 import badRegion from "../data/bad-region.json";
-import { FEATURES, type Feature, type Inputs, type Status } from "./metrics";
+import { FEATURES, type Checkin, type Feature, type Inputs, type Status } from "./metrics";
 
 type BadFeature = {
   bad_min: number;
@@ -74,3 +74,50 @@ export const statusClass: Record<Status, string> = {
   watch: "bg-yellow-100 text-yellow-800",
   warning: "bg-red-100 text-red-800",
 };
+
+const moveThreshold: Record<Feature, number> = {
+  Pregnancies: 1,
+  Glucose: 8,
+  BloodPressure: 5,
+  SkinThickness: 5,
+  Insulin: 15,
+  BMI: 1,
+  DiabetesPedigreeFunction: 0.1,
+  Age: 1,
+};
+
+const neat = (n: number) => String(Math.round(n * 10) / 10);
+
+export function summarizeHistory(checkins: Checkin[]): string | null {
+  const sorted = [...checkins].sort((a, b) => a.date.localeCompare(b.date));
+  if (sorted.length === 0) return null;
+  const first = sorted[0];
+  const last = sorted[sorted.length - 1];
+  const scored = sorted.filter((c) => c.risk !== null);
+  const parts = [
+    `Profile has ${sorted.length} checkin${sorted.length === 1 ? "" : "s"} from ${first.date} to ${last.date}.`,
+  ];
+  if (scored.length >= 2) {
+    parts.push(
+      `Risk moved from ${neat(scored[0].risk as number)} to ${neat(scored[scored.length - 1].risk as number)}.`,
+    );
+  } else {
+    parts.push(`No scored risk trend yet.`);
+  }
+  parts.push(
+    `Zone hits moved from ${first.bandHits} to ${last.bandHits} of 8.`,
+  );
+  const movers: string[] = [];
+  for (const f of FEATURES) {
+    const delta = last.inputs[f] - first.inputs[f];
+    if (Math.abs(delta) >= moveThreshold[f]) {
+      movers.push(`${f} moved from ${neat(first.inputs[f])} to ${neat(last.inputs[f])}`);
+    }
+  }
+  parts.push(
+    movers.length > 0
+      ? movers.join(". ") + "."
+      : `Other metrics stayed near start values.`,
+  );
+  return parts.join(" ");
+}

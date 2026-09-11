@@ -22,6 +22,7 @@ import {
   download,
   loadStore,
   parseReportCsv,
+  saveSelected,
   saveStore,
   today,
   uid,
@@ -48,6 +49,10 @@ export default function Tracking({ inputs, risk }: Props) {
     setCheckins(s.checkins);
     if (s.persons.length > 0) setSelectedId(s.persons[0].id);
   }, []);
+
+  useEffect(() => {
+    saveSelected(selectedId);
+  }, [selectedId]);
 
   const persist = (p: Person[], c: Checkin[]) => {
     setPersons(p);

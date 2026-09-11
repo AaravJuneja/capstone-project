@@ -137,3 +137,22 @@ export function download(filename: string, text: string): void {
 export const csvTemplate = () =>
   ["date", ...FEATURES].join(",") +
   `\n${today()},0,100,70,20,80,25,0.5,30\n`;
+
+const SELECTED_KEY = "capstone.tracking.selected";
+
+export function loadSelected(): string {
+  try {
+    return localStorage.getItem(SELECTED_KEY) ?? "";
+  } catch {
+    return "";
+  }
+}
+
+export function saveSelected(id: string): void {
+  try {
+    if (id) localStorage.setItem(SELECTED_KEY, id);
+    else localStorage.removeItem(SELECTED_KEY);
+  } catch {
+    return;
+  }
+}
