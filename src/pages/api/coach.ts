@@ -3,7 +3,7 @@ import { env } from "cloudflare:workers";
 
 export const prerender = false;
 
-const MODEL = "gemini-2.0-flash";
+const MODELS = ["gemini-2.5-flash", "gemini-3.6-flash"];
 
 export const POST: APIRoute = async (context) => {
   const key = env.GEMINI_API_KEY ?? import.meta.env.GEMINI_API_KEY;
@@ -49,20 +49,24 @@ Use semantic tags like <h3>, <p>, <ul>, <li>, and <strong>.
 Do NOT wrap the response in markdown blocks (e.g., do not use \`\`\`html).
 Keep the tone encouraging, and add a brief medical disclaimer in a <small> tag at the end.`;
 
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${key}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-      }),
-    },
-  );
+  let res: Response | null = null;
+  for (const model of MODELS) {
+    res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+        }),
+      },
+    );
+    if (res.status !== 404) break;
+  }
 
-  if (!res.ok) {
+  if (!res || !res.ok) {
     return Response.json(
-      { error: `Coach provider failed: ${res.status}` },
+      { error: `Coach provider failed: ${res?.status ?? "no response"}` },
       { status: 502 },
     );
   }
