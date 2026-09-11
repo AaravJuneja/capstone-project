@@ -149,10 +149,10 @@ export default function Dashboard() {
     if (riskScore === null) return;
     setLoadingCoach(true);
     try {
-      const res = await fetch(`${API_URL}/coach?risk_score=${riskScore}`, {
+      const res = await fetch("/api/coach", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ patient: formData, risk_score: riskScore }),
       });
       if (!res.ok) throw new Error(`coach failed: ${res.status}`);
       const data = await res.json();
