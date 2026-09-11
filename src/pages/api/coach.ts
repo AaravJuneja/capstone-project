@@ -3,11 +3,11 @@ import { env } from "cloudflare:workers";
 
 export const prerender = false;
 
-// Strongest free options first, auto router last so a delisted
-// endpoint can never take the coach down with it.
 const MODELS = [
+  "minimax/minimax-m3:free",
   "nvidia/nemotron-3-ultra-550b-a55b:free",
   "google/gemma-4-31b-it:free",
+  "z-ai/glm-5.2:free",
   "openai/gpt-oss-20b:free",
   "openrouter/free",
 ];
