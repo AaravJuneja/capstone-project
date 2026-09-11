@@ -117,7 +117,10 @@ export default function Dashboard() {
         if (data.risk_score !== undefined) {
           setRiskScore(data.risk_score);
           const formatted = Object.entries(
-            (data.shap_values ?? {}) as Record<string, unknown>,
+            ((data.contributions ?? data.shap_values ?? {}) as Record<
+              string,
+              unknown
+            >),
           ).map(([key, val]) => ({
             feature: key,
             impact: Number(val),
