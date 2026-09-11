@@ -82,7 +82,7 @@ export function AccuracyChart({
             tick={{ fontSize: 12 }}
           />
           <Tooltip />
-          <Bar dataKey="accuracy" fill="#2563eb" radius={[0, 4, 4, 0]} />
+          <Bar dataKey="accuracy" fill="#a869db" radius={[0, 4, 4, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>
