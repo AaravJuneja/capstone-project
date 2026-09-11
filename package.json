@@ -10,7 +10,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "deploy": "astro build && wrangler deploy",
+    "deploy": "astro build && wrangler deploy --config wrangler.worker.jsonc",
     "data": "bun tools/compute-stats.ts",
     "generate-types": "wrangler types"
   },
