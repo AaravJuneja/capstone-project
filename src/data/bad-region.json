@@ -1,0 +1,105 @@
+{
+  "source": "confirmed-diabetes split (Outcome==1) of legacy/Healthcare-Diabetes.csv",
+  "n_diabetic": 952,
+  "n_healthy": 1816,
+  "features": {
+    "Pregnancies": {
+      "bad_min": 4,
+      "diabetic_median": 4,
+      "diabetic_p75": 7.25,
+      "diabetic_mean": 4.77,
+      "healthy_median": 2
+    },
+    "Glucose": {
+      "bad_min": 140,
+      "diabetic_median": 140,
+      "diabetic_p75": 167,
+      "diabetic_mean": 141.48,
+      "healthy_median": 107
+    },
+    "BloodPressure": {
+      "bad_min": 74,
+      "diabetic_median": 74,
+      "diabetic_p75": 82,
+      "diabetic_mean": 71.07,
+      "healthy_median": 70
+    },
+    "SkinThickness": {
+      "bad_min": 27,
+      "diabetic_median": 27,
+      "diabetic_p75": 36,
+      "diabetic_mean": 22.5,
+      "healthy_median": 22
+    },
+    "Insulin": {
+      "bad_min": 0,
+      "diabetic_median": 0,
+      "diabetic_p75": 167,
+      "diabetic_mean": 99.3,
+      "healthy_median": 42.5
+    },
+    "BMI": {
+      "bad_min": 34.3,
+      "diabetic_median": 34.3,
+      "diabetic_p75": 38.7,
+      "diabetic_mean": 35.27,
+      "healthy_median": 30.1
+    },
+    "DiabetesPedigreeFunction": {
+      "bad_min": 0.44,
+      "diabetic_median": 0.44,
+      "diabetic_p75": 0.73,
+      "diabetic_mean": 0.54,
+      "healthy_median": 0.34
+    },
+    "Age": {
+      "bad_min": 36,
+      "diabetic_median": 36,
+      "diabetic_p75": 44,
+      "diabetic_mean": 36.99,
+      "healthy_median": 26
+    }
+  },
+  "centroids": {
+    "diabetic": [
+      4.77,
+      141.48,
+      71.07,
+      22.5,
+      99.3,
+      35.27,
+      0.54,
+      36.99
+    ],
+    "healthy": [
+      3.2,
+      110.42,
+      68.12,
+      19.95,
+      70.08,
+      30.49,
+      0.43,
+      31.11
+    ],
+    "stds": [
+      3.32,
+      32.03,
+      19.23,
+      16.06,
+      112.28,
+      8.07,
+      0.33,
+      11.78
+    ],
+    "order": [
+      "Pregnancies",
+      "Glucose",
+      "BloodPressure",
+      "SkinThickness",
+      "Insulin",
+      "BMI",
+      "DiabetesPedigreeFunction",
+      "Age"
+    ]
+  }
+}

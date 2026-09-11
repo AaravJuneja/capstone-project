@@ -11,6 +11,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "deploy": "astro build && wrangler deploy",
+    "data": "bun tools/compute-stats.ts",
     "generate-types": "wrangler types"
   },
   "dependencies": {

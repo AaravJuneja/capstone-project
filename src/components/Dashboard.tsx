@@ -8,6 +8,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Activity, BrainCircuit } from "lucide-react";
+import Tracking from "./Tracking";
 
 const API_URL =
   import.meta.env.PUBLIC_API_URL ??
@@ -94,6 +95,7 @@ export default function Dashboard() {
   const [predictError, setPredictError] = useState<string | null>(null);
   const [coachAdvice, setCoachAdvice] = useState<string>("");
   const [loadingCoach, setLoadingCoach] = useState(false);
+  const [tab, setTab] = useState<"assess" | "track">("assess");
   const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
@@ -170,6 +172,25 @@ export default function Dashboard() {
         </p>
       </header>
 
+      <div className="flex gap-2 mb-8">
+        {(["assess", "track"] as const).map((t) => (
+          <button
+            key={t}
+            onClick={() => setTab(t)}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              tab === t
+                ? "bg-blue-600 text-white"
+                : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
+            }`}
+          >
+            {t === "assess" ? "Risk Assessment" : "My Tracking"}
+          </button>
+        ))}
+      </div>
+
+      {tab === "track" ? (
+        <Tracking inputs={formData} risk={riskScore} />
+      ) : (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 md:col-span-1">
           <h2 className="text-xl font-semibold mb-4">Patient Metrics</h2>
@@ -286,6 +307,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 }

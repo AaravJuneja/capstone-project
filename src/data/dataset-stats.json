@@ -1,0 +1,273 @@
+{
+  "source": "legacy/Healthcare-Diabetes.csv",
+  "rows": 2768,
+  "diabetic": 952,
+  "healthy": 1816,
+  "diabetic_rate": 0.34,
+  "features": {
+    "Pregnancies": {
+      "overall": {
+        "n": 2768,
+        "mean": 3.74,
+        "std": 3.32,
+        "min": 0,
+        "p25": 1,
+        "median": 3,
+        "p75": 6,
+        "max": 17
+      },
+      "diabetic": {
+        "n": 952,
+        "mean": 4.77,
+        "std": 3.74,
+        "min": 0,
+        "p25": 1,
+        "median": 4,
+        "p75": 7.25,
+        "max": 17
+      },
+      "healthy": {
+        "n": 1816,
+        "mean": 3.2,
+        "std": 2.94,
+        "min": 0,
+        "p25": 1,
+        "median": 2,
+        "p75": 5,
+        "max": 13
+      },
+      "correlation_with_outcome": 0.22
+    },
+    "Glucose": {
+      "overall": {
+        "n": 2768,
+        "mean": 121.1,
+        "std": 32.03,
+        "min": 0,
+        "p25": 99,
+        "median": 117,
+        "p75": 141,
+        "max": 199
+      },
+      "diabetic": {
+        "n": 952,
+        "mean": 141.48,
+        "std": 31.97,
+        "min": 0,
+        "p25": 119,
+        "median": 140,
+        "p75": 167,
+        "max": 199
+      },
+      "healthy": {
+        "n": 1816,
+        "mean": 110.42,
+        "std": 26.39,
+        "min": 0,
+        "p25": 93,
+        "median": 107,
+        "p75": 125,
+        "max": 197
+      },
+      "correlation_with_outcome": 0.46
+    },
+    "BloodPressure": {
+      "overall": {
+        "n": 2768,
+        "mean": 69.13,
+        "std": 19.23,
+        "min": 0,
+        "p25": 62,
+        "median": 72,
+        "p75": 80,
+        "max": 122
+      },
+      "diabetic": {
+        "n": 952,
+        "mean": 71.07,
+        "std": 21.16,
+        "min": 0,
+        "p25": 66,
+        "median": 74,
+        "p75": 82,
+        "max": 114
+      },
+      "healthy": {
+        "n": 1816,
+        "mean": 68.12,
+        "std": 18.05,
+        "min": 0,
+        "p25": 62,
+        "median": 70,
+        "p75": 78,
+        "max": 122
+      },
+      "correlation_with_outcome": 0.07
+    },
+    "SkinThickness": {
+      "overall": {
+        "n": 2768,
+        "mean": 20.82,
+        "std": 16.06,
+        "min": 0,
+        "p25": 0,
+        "median": 23,
+        "p75": 32,
+        "max": 110
+      },
+      "diabetic": {
+        "n": 952,
+        "mean": 22.5,
+        "std": 17.61,
+        "min": 0,
+        "p25": 0,
+        "median": 27,
+        "p75": 36,
+        "max": 99
+      },
+      "healthy": {
+        "n": 1816,
+        "mean": 19.95,
+        "std": 15.1,
+        "min": 0,
+        "p25": 0,
+        "median": 22,
+        "p75": 31,
+        "max": 110
+      },
+      "correlation_with_outcome": 0.08
+    },
+    "Insulin": {
+      "overall": {
+        "n": 2768,
+        "mean": 80.13,
+        "std": 112.28,
+        "min": 0,
+        "p25": 0,
+        "median": 37,
+        "p75": 130,
+        "max": 846
+      },
+      "diabetic": {
+        "n": 952,
+        "mean": 99.3,
+        "std": 133.04,
+        "min": 0,
+        "p25": 0,
+        "median": 0,
+        "p75": 167,
+        "max": 846
+      },
+      "healthy": {
+        "n": 1816,
+        "mean": 70.08,
+        "std": 98.2,
+        "min": 0,
+        "p25": 0,
+        "median": 42.5,
+        "p75": 105,
+        "max": 744
+      },
+      "correlation_with_outcome": 0.12
+    },
+    "BMI": {
+      "overall": {
+        "n": 2768,
+        "mean": 32.14,
+        "std": 8.07,
+        "min": 0,
+        "p25": 27.3,
+        "median": 32.2,
+        "p75": 36.63,
+        "max": 80.6
+      },
+      "diabetic": {
+        "n": 952,
+        "mean": 35.27,
+        "std": 7.18,
+        "min": 0,
+        "p25": 30.88,
+        "median": 34.3,
+        "p75": 38.7,
+        "max": 67.1
+      },
+      "healthy": {
+        "n": 1816,
+        "mean": 30.49,
+        "std": 8.03,
+        "min": 0,
+        "p25": 25.6,
+        "median": 30.1,
+        "p75": 35.32,
+        "max": 80.6
+      },
+      "correlation_with_outcome": 0.28
+    },
+    "DiabetesPedigreeFunction": {
+      "overall": {
+        "n": 2768,
+        "mean": 0.47,
+        "std": 0.33,
+        "min": 0.078,
+        "p25": 0.24,
+        "median": 0.38,
+        "p75": 0.62,
+        "max": 2.42
+      },
+      "diabetic": {
+        "n": 952,
+        "mean": 0.54,
+        "std": 0.37,
+        "min": 0.088,
+        "p25": 0.26,
+        "median": 0.44,
+        "p75": 0.73,
+        "max": 2.42
+      },
+      "healthy": {
+        "n": 1816,
+        "mean": 0.43,
+        "std": 0.3,
+        "min": 0.078,
+        "p25": 0.23,
+        "median": 0.34,
+        "p75": 0.57,
+        "max": 2.329
+      },
+      "correlation_with_outcome": 0.16
+    },
+    "Age": {
+      "overall": {
+        "n": 2768,
+        "mean": 33.13,
+        "std": 11.78,
+        "min": 21,
+        "p25": 24,
+        "median": 29,
+        "p75": 40,
+        "max": 81
+      },
+      "diabetic": {
+        "n": 952,
+        "mean": 36.99,
+        "std": 10.93,
+        "min": 21,
+        "p25": 28,
+        "median": 36,
+        "p75": 44,
+        "max": 70
+      },
+      "healthy": {
+        "n": 1816,
+        "mean": 31.11,
+        "std": 11.7,
+        "min": 21,
+        "p25": 23,
+        "median": 26,
+        "p75": 37,
+        "max": 81
+      },
+      "correlation_with_outcome": 0.24
+    }
+  }
+}
