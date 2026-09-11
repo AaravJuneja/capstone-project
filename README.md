@@ -64,8 +64,8 @@ Forest on FastAPI, OpenRouter free models for the coach.
 
 | Piece | Status | Notes |
 |---|---|---|
-| Predict API | Current | FastAPI scoring service on Render |
-| Render service | Upcoming feat | Slim FastAPI build without SHAP, with health check |
+| Predict API | Current | FastAPI scoring service on Render at https://capstone-project-l46z.onrender.com |
+| Render service | Current | Slim FastAPI build without SHAP, with health check |
 
 ## Disclaimer
 
