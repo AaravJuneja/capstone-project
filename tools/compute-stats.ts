@@ -1,6 +1,3 @@
-// Offline one-time stats builder. Reads the project CSV from legacy/ and
-// writes baked JSON used by the frontend (analysis pages + bad-region).
-// Run: bun run data
 import { writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -111,10 +108,6 @@ for (const f of FEATURES) {
     healthy: sH,
     correlation_with_outcome: round2(pearson(all, outcomes)),
   };
-  // Bad region entry: value at/above the confirmed-diabetic median sits
-  // where at least half of diabetic cases sit (or worse). Validated on the
-  // full CSV: median-based counting + distance gap separates the Outcome
-  // split (diabetic warn ~63% / healthy warn ~23% without model risk).
   badRegionFeatures[f] = {
     bad_min: sD.median,
     diabetic_median: sD.median,

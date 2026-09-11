@@ -68,7 +68,6 @@ export interface ParseResult {
   errors: string[];
 }
 
-/** Parse an uploaded lab-report CSV: header row with date + 8 metric columns. */
 export function parseReportCsv(text: string): ParseResult {
   const errors: string[] = [];
   const rows: { date: string; inputs: Inputs }[] = [];

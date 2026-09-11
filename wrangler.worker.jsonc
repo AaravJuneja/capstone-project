@@ -1,10 +1,3 @@
-/**
- * Deploy-only config: used AFTER `astro build`, when dist/server/entry.mjs
- * exists. Root wrangler.jsonc intentionally has no `main` because the
- * Cloudflare Vite plugin validates it at build start — at which point Astro
- * has just wiped dist/ — and fails the build. See README-free history:
- * keep build config and deploy config separate.
- */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "capstone",

@@ -1,10 +1,3 @@
-"""Diabetes risk API — predict-only slim service.
-
-Replaces the legacy SHAP/pandas/Gemini backend. Explainability is computed
-as leave-one-out contributions with the model itself (no SHAP dependency),
-so this stays small enough for a Render free instance.
-"""
-
 from pathlib import Path
 
 import numpy as np
@@ -23,8 +16,6 @@ FEATURES = [
     "Age",
 ]
 
-# Overall training means from legacy/Healthcare-Diabetes.csv
-# (see src/data/dataset-stats.json). LOO baseline per feature.
 MEANS = {
     "Pregnancies": 3.74,
     "Glucose": 121.1,
@@ -99,8 +90,6 @@ def predict_risk(data: PatientData):
     x = [float(getattr(data, f)) for f in FEATURES]
     base = _proba(x)
 
-    # Leave-one-out: how much does each feature move the probability
-    # away from the value it would have at the population mean?
     contributions: dict[str, float] = {}
     for i, f in enumerate(FEATURES):
         alt = list(x)

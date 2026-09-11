@@ -14,16 +14,11 @@ const diabeticCentroid = badRegion.centroids.diabetic as number[];
 const healthyCentroid = badRegion.centroids.healthy as number[];
 const stds = badRegion.centroids.stds as number[];
 
-/** Count of metrics sitting at/above the confirmed-diabetic zone. */
 export function bandHits(inputs: Inputs): { count: number; hits: Feature[] } {
   const hits = FEATURES.filter((f) => inputs[f] >= badFeatures[f].bad_min);
   return { count: hits.length, hits };
 }
 
-/**
- * Standardized distance to the diabetic centroid minus distance to the
- * healthy centroid. Negative / shrinking gap = drifting toward bad space.
- */
 export function distGap(inputs: Inputs): number {
   let dD = 0;
   let dH = 0;
@@ -41,10 +36,6 @@ export function assess(
   hits: number,
   gap: number,
 ): Status {
-  // hits counts metrics at/above the confirmed-diabetic median.
-  // Thresholds validated against the full CSV split (see tools/compute-stats.ts):
-  // diabetic rows hit "warning" ~63%, healthy rows ~23% without model risk;
-  // live RF risk (>=60 / >=35) takes precedence when available.
   if (
     (risk !== null && risk >= 60) ||
     (hits >= 4 && gap <= 0) ||
@@ -55,7 +46,6 @@ export function assess(
   return "safe";
 }
 
-/** Least-squares slope of risk over recent check-ins (risk points per check-in). */
 export function riskSlope(risks: (number | null)[]): number | null {
   const pts = risks.filter((r): r is number => r !== null).slice(-5);
   if (pts.length < 2) return null;

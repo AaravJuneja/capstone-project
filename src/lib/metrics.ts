@@ -87,7 +87,7 @@ export interface Person {
 export interface Checkin {
   id: string;
   personId: string;
-  date: string; // YYYY-MM-DD
+  date: string;
   inputs: Inputs;
   risk: number | null;
   bandHits: number;
