@@ -1,1 +1,11 @@
+@import "@fontsource/outfit";
 @import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --color-brand: #a869db;
+  --color-brand-deep: #7e3fb8;
+  --color-brand-soft: #f5edfd;
+  --color-brand-mist: #faf7fe;
+  --color-brand-line: #e3d2f6;
+}

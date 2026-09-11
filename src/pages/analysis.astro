@@ -28,10 +28,10 @@ const accRows = metrics.models.map((m) => ({
 }));
 ---
 
-<Layout title="Analysis — Diabetes Capstone">
+<Layout title="Analysis: Diabetes Capstone">
   <div class="px-8 py-8 space-y-10">
     <header>
-      <p class="text-xs font-semibold tracking-wide text-blue-600 uppercase">
+      <p class="text-xs font-semibold tracking-wide text-brand uppercase">
         Unit 2 · Data Science Methodology (Rollins / IBM) · SDG 3
       </p>
       <h1 class="text-3xl font-bold mt-1">
@@ -40,14 +40,13 @@ const accRows = metrics.models.map((m) => ({
       <p class="text-sm text-gray-500 mt-2">
         Every number below is computed from our dataset
         (<code>{stats.source}</code>: {stats.rows} rows, {stats.diabetic}{" "}
-        diabetic / {stats.healthy} healthy) — run <code>bun run data</code> to
-        regenerate.
+        diabetic / {stats.healthy} healthy).
       </p>
     </header>
 
     <section class="bg-white p-6 rounded-xl border border-gray-100">
       <h2 class="text-xl font-semibold mb-2">
-        1 · Business Understanding — from problem to approach
+        1 · Business Understanding: from problem to approach
       </h2>
       <p class="text-sm text-gray-700">
         <strong>Problem:</strong> diabetes is often detected late, after
@@ -55,14 +54,14 @@ const accRows = metrics.models.map((m) => ({
         who want an early, understandable risk signal from routine health
         numbers. <strong>Goal:</strong> a predictive classifier (will this
         profile look diabetic?) plus prescriptive coaching (what to do next),
-        aligned with <strong>SDG 3: Good Health &amp; Well-being</strong>.
+        aligned with <strong>SDG 3: Good Health and Wellbeing</strong>.
         Analytic approach: binary classification on 8 numeric health features.
       </p>
     </section>
 
     <section class="bg-white p-6 rounded-xl border border-gray-100">
       <h2 class="text-xl font-semibold mb-2">
-        2 · Data Requirements — 5W1H
+        2 · Data Requirements: 5W1H
       </h2>
       <p class="text-sm text-gray-700">
         <strong>What:</strong> 8 inputs (Pregnancies, Glucose, BloodPressure,
@@ -70,18 +69,18 @@ const accRows = metrics.models.map((m) => ({
         label. <strong>Where:</strong> structured CSV table.{" "}
         <strong>How much:</strong> {stats.rows} labelled rows ({Math.round(
           stats.diabetic_rate * 100,
-        )}% positive) — enough for classical ML, too small for deep learning.
+        )}% positive). Enough for classical ML, too small for deep learning.
       </p>
     </section>
 
     <section class="bg-white p-6 rounded-xl border border-gray-100">
       <h2 class="text-xl font-semibold mb-2">3 · Data Collection</h2>
       <p class="text-sm text-gray-700 mb-4">
-        Secondary data: the Healthcare-Diabetes CSV (Pima-style). Credible,
-        permission-free for education. Ethics: de-identified rows, no names;
-        our app stores personal check-ins only in the visitor's own browser.
+        Secondary data: the Healthcare-Diabetes CSV (Pima style). Credible,
+        free to use for education. Ethics: anonymized rows, no names;
+        our app stores personal checkins only in the visitor's own browser.
         Known bias: zeros in Glucose/BloodPressure/SkinThickness/Insulin/BMI
-        are missing-value placeholders, not real measurements.
+        are missing value placeholders, not real measurements.
       </p>
       <OutcomeBalance
         healthy={stats.healthy}
@@ -112,7 +111,7 @@ const accRows = metrics.models.map((m) => ({
               <th class="py-2 pr-3">Median</th>
               <th class="py-2 pr-3">Diabetic median</th>
               <th class="py-2 pr-3">Healthy median</th>
-              <th class="py-2 pr-3">Corr. w/ outcome</th>
+              <th class="py-2 pr-3">Correlation</th>
             </tr>
           </thead>
           <tbody>
@@ -137,11 +136,11 @@ const accRows = metrics.models.map((m) => ({
       <h2 class="text-xl font-semibold mb-2">5 · Data Preparation</h2>
       <p class="text-sm text-gray-700">
         Dropped the <code>Id</code> column (identifier, not signal). Clipped
-        outliers to the 50th–95th percentile band during training exploration.
+        outliers to the 50th to 95th percentile band during training exploration.
         Split {metrics.split.train} train / {metrics.split.test} test
         (test_size={metrics.split.test_size}, random_state={
           metrics.split.random_state
-        }). No scaling — tree models don't need it.
+        }). No scaling. Tree models do not need it.
       </p>
     </section>
 
@@ -150,7 +149,7 @@ const accRows = metrics.models.map((m) => ({
       <p class="text-sm text-gray-700 mb-4">
         Trained SVM (linear), Decision Tree and Random Forest (
         {metrics.models[2].params}). Deployed:{" "}
-        <strong>{metrics.deployed}</strong> — {metrics.deploy_reason}
+        <strong>{metrics.deployed}</strong>: {metrics.deploy_reason}
       </p>
       <AccuracyChart rows={accRows} client:load />
     </section>
@@ -164,7 +163,7 @@ const accRows = metrics.models.map((m) => ({
             .map((m) => (
               <div>
                 <h3 class="font-semibold text-sm mb-2">
-                  {m.name} — accuracy {m.accuracy}
+                  {m.name}: accuracy {m.accuracy}
                 </h3>
                 <table class="text-xs border">
                   <thead>
@@ -202,8 +201,8 @@ const accRows = metrics.models.map((m) => ({
         }
       </div>
       <p class="text-sm text-gray-700 mt-4">
-        Read: the tree memorises the test split (96%) — classic overfit on
-        noisy tabular data — while SVM underfits the minority class (recall
+        Read: the tree memorises the test split (96%). Classic overfit on
+        noisy tabular data, while SVM underfits the minority class (recall
         0.46 on diabetics). The forest balances both, and its probability
         output doubles as our risk score.
       </p>
@@ -212,22 +211,21 @@ const accRows = metrics.models.map((m) => ({
     <section class="bg-white p-6 rounded-xl border border-gray-100">
       <h2 class="text-xl font-semibold mb-2">8 · Deployment</h2>
       <p class="text-sm text-gray-700">
-        Static Astro frontend on a Cloudflare Worker (this site) → prediction
-        API on Render (FastAPI + <code>model.pkl</code>) → SHAP-style
-        explanation bars → Gemini health coach. One repo, free tiers, no
-        servers to babysit.
+        Static Astro frontend on a Cloudflare Worker serves this site. A
+        prediction API on Render scores each profile. Explanation bars show
+        why. An OpenRouter coach writes the action plan.
       </p>
     </section>
 
     <section class="bg-white p-6 rounded-xl border border-gray-100">
-      <h2 class="text-xl font-semibold mb-2">9–10 · Feedback loop</h2>
+      <h2 class="text-xl font-semibold mb-2">        9 and 10 · Feedback loop</h2>
       <p class="text-sm text-gray-700">
-        The <a href="/" class="text-blue-600 hover:underline">My Tracking</a>{" "}
-        tab closes the loop: routine per-person check-ins are scored against
-        the confirmed-diabetic zone (bad-region bands + centroid distance +
-        risk slope). Drift toward the bad zone triggers early-sign flags —
-        deployment feedback that a static one-shot predictor can never give.
-        Next iteration: retrain on volunteered (anonymised) check-ins.
+        The <a href="/" class="text-brand hover:underline">My Tracking</a>{" "}
+        tab closes the loop: routine per person checkins are scored against
+        the confirmed diabetic zone (bands plus centroid distance plus
+        risk slope). Drift toward the bad zone triggers early sign flags.
+        Deployment feedback that a single score predictor can never give.
+        Next iteration: retrain on volunteered (anonymised) checkins.
       </p>
     </section>
   </div>

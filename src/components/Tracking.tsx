@@ -109,7 +109,7 @@ export default function Tracking({ inputs, risk }: Props) {
       distGap: gap,
     };
     persist(persons, [...checkins, c]);
-    setNotice(`Saved check-in for ${date}.`);
+    setNotice(`Saved checkin for ${date}.`);
   };
 
   const removeCheckin = (id: string) => {
@@ -143,7 +143,7 @@ export default function Tracking({ inputs, risk }: Props) {
     });
     persist(persons, [...checkins, ...fresh]);
     setNotice(
-      `Imported ${fresh.length} row(s) without live risk — move the sliders to a matching reading and save for a scored check-in.`,
+      `Imported ${fresh.length} rows without live risk. Move the sliders to a matching reading and save for a scored checkin.`,
     );
   };
 
@@ -159,8 +159,8 @@ export default function Tracking({ inputs, risk }: Props) {
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
         <h2 className="text-xl font-semibold mb-1">Personal Profiling</h2>
         <p className="text-sm text-gray-500 mb-4">
-          Routine check-ins per person. History stays in this browser —
-          no account, no fees. Export anytime for your records.
+          Routine checkins per person. History stays in this browser. No
+          account and no fees. Export anytime for your records.
         </p>
         <div className="flex flex-wrap gap-2 items-center">
           <select
@@ -183,7 +183,7 @@ export default function Tracking({ inputs, risk }: Props) {
           />
           <button
             onClick={addPerson}
-            className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium flex items-center gap-1"
+            className="px-3 py-2 bg-brand hover:bg-brand-deep text-white rounded-lg text-sm font-medium flex items-center gap-1"
           >
             <UserPlus size={16} /> Add
           </button>
@@ -196,18 +196,18 @@ export default function Tracking({ inputs, risk }: Props) {
             </button>
           )}
         </div>
-        {notice && <p className="text-sm text-blue-700 mt-3">{notice}</p>}
+        {notice && <p className="text-sm text-brand-deep mt-3">{notice}</p>}
       </div>
 
       {selected && (
         <>
           <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
             <h3 className="text-lg font-semibold mb-1">
-              Save current sliders as a check-in
+              Save current sliders as a checkin
             </h3>
             <p className="text-sm text-gray-500 mb-4">
               Current reading:{" "}
-              <span className="font-bold text-blue-600">
+              <span className="font-bold text-brand">
                 {risk !== null ? `${risk.toFixed(1)}%` : "--%"}
               </span>{" "}
               ·{" "}
@@ -228,9 +228,9 @@ export default function Tracking({ inputs, risk }: Props) {
               />
               <button
                 onClick={saveCheckin}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium flex items-center gap-1"
+                className="px-4 py-2 bg-brand hover:bg-brand-deep text-white rounded-lg text-sm font-medium flex items-center gap-1"
               >
-                <Save size={16} /> Save check-in for {selected.name}
+                <Save size={16} /> Save checkin for {selected.name}
               </button>
             </div>
           </div>
@@ -238,12 +238,12 @@ export default function Tracking({ inputs, risk }: Props) {
           <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
             <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
               <h3 className="text-lg font-semibold">
-                Trajectory — {selected.name}
+                Trajectory for {selected.name}
                 {mine.length > 0 && (
                   <span className="text-sm font-normal text-gray-500 ml-2">
-                    {mine.length} check-in(s)
+                    {mine.length} checkins
                     {slope !== null &&
-                      ` · trend ${slope > 0 ? "+" : ""}${slope}% per check-in`}
+                      ` · trend ${slope > 0 ? "+" : ""}${slope}% per checkin`}
                   </span>
                 )}
               </h3>
@@ -290,7 +290,7 @@ export default function Tracking({ inputs, risk }: Props) {
 
             {mine.length === 0 ? (
               <p className="text-sm text-gray-500">
-                No check-ins yet. Save the sliders above or upload a report
+                No checkins yet. Save the sliders above or upload a report
                 CSV with columns: date, Pregnancies, Glucose, BloodPressure,
                 SkinThickness, Insulin, BMI, DiabetesPedigreeFunction, Age.
               </p>
@@ -382,7 +382,7 @@ export default function Tracking({ inputs, risk }: Props) {
                         <th className="py-2 pr-4">Date</th>
                         <th className="py-2 pr-4">Risk</th>
                         <th className="py-2 pr-4">Status</th>
-                        <th className="py-2 pr-4">Bad-zone metrics</th>
+                        <th className="py-2 pr-4">Bad zone metrics</th>
                         <th className="py-2 pr-4">Gap</th>
                         <th className="py-2"></th>
                       </tr>
@@ -394,7 +394,7 @@ export default function Tracking({ inputs, risk }: Props) {
                           <tr key={c.id} className="border-b last:border-0">
                             <td className="py-2 pr-4">{c.date}</td>
                             <td className="py-2 pr-4 font-medium">
-                              {c.risk !== null ? `${c.risk.toFixed(1)}%` : "—"}
+                              {c.risk !== null ? `${c.risk.toFixed(1)}%` : "--"}
                             </td>
                             <td className="py-2 pr-4">
                               <span
@@ -409,7 +409,7 @@ export default function Tracking({ inputs, risk }: Props) {
                               <button
                                 onClick={() => removeCheckin(c.id)}
                                 className="text-red-500 hover:text-red-700"
-                                aria-label="Delete check-in"
+                                aria-label="Delete checkin"
                               >
                                 <Trash2 size={16} />
                               </button>
@@ -428,8 +428,8 @@ export default function Tracking({ inputs, risk }: Props) {
 
       {persons.length === 0 && (
         <p className="text-sm text-gray-500">
-          Start by adding a profile above — e.g. yourself or a family member
-          you track routinely.
+          Start by adding a profile above, for example yourself or a family
+          member you track routinely.
         </p>
       )}
     </div>
