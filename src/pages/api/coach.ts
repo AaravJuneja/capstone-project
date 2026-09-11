@@ -3,13 +3,22 @@ import { env } from "cloudflare:workers";
 
 export const prerender = false;
 
-const MODELS = ["gemini-2.5-flash", "gemini-3.6-flash"];
+// Strongest free options first, auto router last so a delisted
+// endpoint can never take the coach down with it.
+const MODELS = [
+  "nvidia/nemotron-3-ultra-550b-a55b:free",
+  "google/gemma-4-31b-it:free",
+  "openai/gpt-oss-20b:free",
+  "openrouter/free",
+];
+
+const RETRYABLE = new Set([400, 404, 408, 429, 502, 503, 529]);
 
 export const POST: APIRoute = async (context) => {
-  const key = env.GEMINI_API_KEY ?? import.meta.env.GEMINI_API_KEY;
+  const key = env.OPENROUTER_API_KEY ?? import.meta.env.OPENROUTER_API_KEY;
   if (!key) {
     return Response.json(
-      { error: "Coach not configured. Set the GEMINI_API_KEY secret." },
+      { error: "Coach not configured. Set the OPENROUTER_API_KEY secret." },
       { status: 503 },
     );
   }
@@ -33,52 +42,82 @@ export const POST: APIRoute = async (context) => {
     );
   }
 
-  const prompt = `You are an empathetic and professional AI Health Coach.
-A user has submitted their health metrics:
-- Age: ${patient.Age}
-- BMI: ${patient.BMI}
-- Glucose: ${patient.Glucose}
-- Blood Pressure: ${patient.BloodPressure}
-${trend ? `Recent trajectory: ${trend}.\n` : ""}
-Based on our predictive model, they have a ${risk_score}% predicted chance of developing diabetes.
+  const trendLine = trend
+    ? `Recent checkins show this: ${trend}. `
+    : "";
+  const system =
+    "You are a warm and professional health coach. " +
+    "Write in a plain human voice that a friend would use. " +
+    "Never use em dashes or en dashes or hyphens or Oxford commas. " +
+    "Avoid flowery phrasing and avoid robotic lists. " +
+    "Reply with raw HTML only, using h3 and p and ul and li and strong tags. " +
+    "Do not use code fences. " +
+    "End with a short medical disclaimer inside a small tag.";
+  const user =
+    `The user shared these health numbers. ` +
+    `Age ${patient.Age}. ` +
+    `BMI ${patient.BMI}. ` +
+    `Glucose ${patient.Glucose}. ` +
+    `Blood pressure ${patient.BloodPressure}. ` +
+    trendLine +
+    `Our model predicts about a ${risk_score} percent chance of developing diabetes. ` +
+    `Give 3 friendly and practical lifestyle tips that support general wellness. ` +
+    `These tips are for education only and are not medical advice.`;
 
-Please provide 3 friendly actionable, and non-medical lifestyle tips to help them improve their health.
-
-IMPORTANT: Return your entire response strictly as raw HTML.
-Use semantic tags like <h3>, <p>, <ul>, <li>, and <strong>.
-Do NOT wrap the response in markdown blocks (e.g., do not use \`\`\`html).
-Keep the tone encouraging, and add a brief medical disclaimer in a <small> tag at the end.`;
-
-  let res: Response | null = null;
+  let lastStatus = 502;
   for (const model of MODELS) {
-    res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
-      {
+    let res: Response;
+    try {
+      res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${key}`,
+          "HTTP-Referer": "https://capstone.aarav-juneja2044.workers.dev",
+          "X-Title": "capstone",
+        },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
+          model,
+          messages: [
+            { role: "system", content: system },
+            { role: "user", content: user },
+          ],
+          temperature: 0.7,
+          reasoning: { effort: "high", exclude: true },
         }),
-      },
-    );
-    if (res.status !== 404) break;
+      });
+    } catch {
+      lastStatus = 502;
+      continue;
+    }
+    if (RETRYABLE.has(res.status)) {
+      lastStatus = res.status;
+      continue;
+    }
+    if (!res.ok) {
+      return Response.json(
+        { error: `Coach provider failed: ${res.status}` },
+        { status: 502 },
+      );
+    }
+    const data = (await res.json()) as {
+      choices?: { message?: { content?: string } }[];
+    };
+    const text = data.choices?.[0]?.message?.content ?? "";
+    const clean = text
+      .replace(/^```html\s*/i, "")
+      .replace(/^```\s*/, "")
+      .replace(/\s*```$/, "")
+      .trim();
+    if (!clean) {
+      lastStatus = 502;
+      continue;
+    }
+    return Response.json({ coach_advice: clean, model });
   }
 
-  if (!res || !res.ok) {
-    return Response.json(
-      { error: `Coach provider failed: ${res?.status ?? "no response"}` },
-      { status: 502 },
-    );
-  }
-
-  const data = (await res.json()) as {
-    candidates?: { content?: { parts?: { text?: string }[] } }[];
-  };
-  const text =
-    data.candidates?.[0]?.content?.parts?.map((p) => p.text ?? "").join("") ??
-    "";
-  if (!text.trim()) {
-    return Response.json({ error: "Empty coach response." }, { status: 502 });
-  }
-  return Response.json({ coach_advice: text.trim() });
+  return Response.json(
+    { error: `Coach provider failed: ${lastStatus}` },
+    { status: 502 },
+  );
 };
