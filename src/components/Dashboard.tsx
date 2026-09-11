@@ -28,7 +28,7 @@ import { loadSelected, loadStore } from "../lib/store";
 
 const API_URL =
   import.meta.env.PUBLIC_API_URL ??
-  "https://ai-capstone-backend-d09i.onrender.com";
+  "https://capstone-project-l46z.onrender.com";
 
 const FETCH_TIMEOUT_MS = 20000;
 
