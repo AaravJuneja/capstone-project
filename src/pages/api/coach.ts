@@ -73,7 +73,7 @@ export const POST: APIRoute = async (context) => {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${key}`,
-          "HTTP-Referer": "https://capstone.aarav-juneja2044.workers.dev",
+          "HTTP-Referer": "https://capstone.squeakyfiddlepro.me",
           "X-Title": "capstone",
         },
         body: JSON.stringify({
