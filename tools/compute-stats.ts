@@ -146,5 +146,10 @@ mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, "dataset-stats.json"), JSON.stringify(datasetStats, null, 2) + "\n");
 writeFileSync(join(outDir, "bad-region.json"), JSON.stringify(badRegion, null, 2) + "\n");
 
+const means = Object.fromEntries(
+  FEATURES.map((f) => [f, (features[f] as { overall: { mean: number } }).overall.mean]),
+);
+writeFileSync(join(root, "backend", "means.json"), JSON.stringify(means, null, 2) + "\n");
+
 console.log(`rows=${rows.length} diabetic=${diabetic.length} healthy=${healthy.length}`);
-console.log("wrote src/data/dataset-stats.json + src/data/bad-region.json");
+console.log("wrote src/data/dataset-stats.json + src/data/bad-region.json + backend/means.json");

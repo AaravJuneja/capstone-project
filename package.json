@@ -12,6 +12,7 @@
     "astro": "astro",
     "deploy": "astro build && wrangler deploy --config wrangler.worker.jsonc",
     "data": "bun tools/compute-stats.ts",
+    "train": "python3 tools/train-metrics.py",
     "generate-types": "wrangler types"
   },
   "dependencies": {

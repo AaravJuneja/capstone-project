@@ -5,6 +5,9 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
+import json
+import os
+
 FEATURES = [
     "Pregnancies",
     "Glucose",
@@ -16,18 +19,8 @@ FEATURES = [
     "Age",
 ]
 
-MEANS = {
-    "Pregnancies": 3.74,
-    "Glucose": 121.1,
-    "BloodPressure": 69.13,
-    "SkinThickness": 20.82,
-    "Insulin": 80.13,
-    "BMI": 32.14,
-    "DiabetesPedigreeFunction": 0.47,
-    "Age": 33.13,
-}
-
-import os
+with open(Path(__file__).parent / "means.json", encoding="utf-8") as _mf:
+    MEANS = json.load(_mf)
 
 CORS_ORIGINS = [
     o.strip()

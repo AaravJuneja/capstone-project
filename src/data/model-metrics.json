@@ -1,31 +1,74 @@
 {
-  "source": "legacy/Diabetes_code.ipynb outputs (test_size=0.33, random_state=42, test n=914)",
-  "split": { "test_size": 0.33, "random_state": 42, "train": 1854, "test": 914 },
+  "source": "legacy/Diabetes_code.ipynb replication (test_size=0.33, random_state=42)",
+  "split": {
+    "test_size": 0.33,
+    "random_state": 42,
+    "train": 1854,
+    "test": 914
+  },
   "deployed": "Random Forest",
   "deploy_reason": "Decision Tree scores higher on the test split but a single unpruned tree overfits tabular health data; the forest (100 trees, max depth 5) generalises better and gives calibrated predict_proba risk scores instead of hard labels.",
   "models": [
     {
       "name": "SVM (linear)",
       "accuracy": 0.7637,
-      "cm": [[562, 54], [162, 136]],
+      "cm": [
+        [
+          562,
+          54
+        ],
+        [
+          162,
+          136
+        ]
+      ],
       "report": {
-        "0": { "precision": 0.78, "recall": 0.91, "f1": 0.84, "support": 616 },
-        "1": { "precision": 0.72, "recall": 0.46, "f1": 0.56, "support": 298 }
+        "0": {
+          "precision": 0.78,
+          "recall": 0.91,
+          "f1": 0.84,
+          "support": 616
+        },
+        "1": {
+          "precision": 0.72,
+          "recall": 0.46,
+          "f1": 0.56,
+          "support": 298
+        }
       }
     },
     {
       "name": "Decision Tree",
       "accuracy": 0.9617,
-      "cm": [[592, 24], [11, 287]],
+      "cm": [
+        [
+          592,
+          24
+        ],
+        [
+          11,
+          287
+        ]
+      ],
       "report": {
-        "0": { "precision": 0.98, "recall": 0.96, "f1": 0.97, "support": 616 },
-        "1": { "precision": 0.92, "recall": 0.96, "f1": 0.94, "support": 298 }
+        "0": {
+          "precision": 0.98,
+          "recall": 0.96,
+          "f1": 0.97,
+          "support": 616
+        },
+        "1": {
+          "precision": 0.92,
+          "recall": 0.96,
+          "f1": 0.94,
+          "support": 298
+        }
       }
     },
     {
       "name": "Random Forest",
+      "accuracy": 0.8239,
       "params": "n_estimators=100, max_depth=5, random_state=42",
-      "accuracy": 0.82,
       "cm": null,
       "report": null
     }
