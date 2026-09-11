@@ -1,0 +1,67 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { OutcomeBalance } from "../components/AnalysisCharts.tsx";
+import stats from "../data/dataset-stats.json";
+---
+
+<Layout title="Story — Diabetes Capstone">
+  <div class="px-8 py-8 space-y-8 max-w-3xl">
+    <header>
+      <p class="text-xs font-semibold tracking-wide text-blue-600 uppercase">
+        Unit 8 · Data Storytelling — data + visuals + narrative
+      </p>
+      <h1 class="text-3xl font-bold mt-1">The Quiet Drift</h1>
+    </header>
+
+    <section class="bg-white p-6 rounded-xl border border-gray-100">
+      <h2 class="font-semibold mb-2">Setting the scene</h2>
+      <p class="text-sm text-gray-700">
+        {stats.rows} health records. {stats.healthy} people without diabetes,{" "}
+        {stats.diabetic} with it. Same clinics, same tests — two different
+        futures hiding in eight numbers.
+      </p>
+      <div class="mt-4">
+        <OutcomeBalance
+          healthy={stats.healthy}
+          diabetic={stats.diabetic}
+          client:load
+        />
+      </div>
+    </section>
+
+    <section class="bg-white p-6 rounded-xl border border-gray-100">
+      <h2 class="font-semibold mb-2">Rising action — the numbers whisper first</h2>
+      <p class="text-sm text-gray-700">
+        Nobody wakes up diabetic. Glucose creeps from a healthy median of{" "}
+        {stats.features.Glucose.healthy.median} toward the diabetic median of{" "}
+        {stats.features.Glucose.diabetic.median}. BMI edges from{" "}
+        {stats.features.BMI.healthy.median} to{" "}
+        {stats.features.BMI.diabetic.median}. Each step feels normal — until
+        enough of them point the same way.
+      </p>
+    </section>
+
+    <section class="bg-white p-6 rounded-xl border border-red-200">
+      <h2 class="font-semibold mb-2">Climax — the bad zone</h2>
+      <p class="text-sm text-gray-700">
+        We drew a line around where confirmed diabetics live: every metric at
+        or above the diabetic median. Cross into that zone on several metrics
+        at once, and our model — trained on these very records — starts
+        flashing 60% and above. That is the moment to act, months or years
+        before a diagnosis would.
+      </p>
+    </section>
+
+    <section class="bg-white p-6 rounded-xl border border-gray-100">
+      <h2 class="font-semibold mb-2">Resolution — watch the drift, not the day</h2>
+      <p class="text-sm text-gray-700">
+        One reading is noise; a trajectory is a story. The{" "}
+        <a href="/" class="text-blue-600 hover:underline">My Tracking</a> tab
+        plots your own line against the bad zone and warns while the drift is
+        still reversible — with a coach that suggests the next three small
+        steps. Data explained what happened. Narrative decides what happens
+        next.
+      </p>
+    </section>
+  </div>
+</Layout>

@@ -22,6 +22,17 @@ const { title = "Diabetes Risk Assessment" } = Astro.props;
     <title>{title}</title>
   </head>
   <body class="min-h-screen bg-gray-50 font-sans text-gray-800 antialiased">
-    <slot />
+    <nav class="max-w-6xl mx-auto px-8 pt-6 flex gap-5 text-sm font-medium">
+      <a href="/" class="text-blue-600 hover:underline">Assess</a>
+      <a href="/analysis" class="text-blue-600 hover:underline">Analysis</a>
+      <a href="/story" class="text-blue-600 hover:underline">Story</a>
+    </nav>
+    <main class="max-w-6xl mx-auto">
+      <slot />
+    </main>
+    <footer class="max-w-6xl mx-auto px-8 py-8 text-xs text-gray-400">
+      Class XII AI capstone · SDG 3: Good Health &amp; Well-being · For
+      educational purposes only — not medical advice.
+    </footer>
   </body>
 </html>
