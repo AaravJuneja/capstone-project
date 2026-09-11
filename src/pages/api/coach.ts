@@ -5,9 +5,9 @@ export const prerender = false;
 
 const MODELS = [
   "minimax/minimax-m3:free",
+  "z-ai/glm-5.2:free",
   "nvidia/nemotron-3-ultra-550b-a55b:free",
   "google/gemma-4-31b-it:free",
-  "z-ai/glm-5.2:free",
   "openai/gpt-oss-20b:free",
   "openrouter/free",
 ];
